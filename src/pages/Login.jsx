@@ -11,6 +11,10 @@ const Login = () => {
 
   const navigate = useNavigate();
 
+  const isValidEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
   const loginAdmin = async (e) => {
     e.preventDefault();
     try {
@@ -30,9 +34,10 @@ const Login = () => {
     }
   };
 
+  const isButtonDisabled = !email || !password || !isValidEmail(email);
+
   return (
     <div className="min-h-screen w-screen relative flex flex-col sm:flex-row">
-      {/* ✅ Toast Notification */}
       {showToast && (
         <div className="toast toast-top toast-center z-50">
           <div className="alert alert-error text-white shadow-lg">
@@ -41,7 +46,6 @@ const Login = () => {
         </div>
       )}
 
-      {/* Left Panel for Desktop */}
       <div className="hidden sm:flex basis-2/3 bg-gradient-to-b from-[#f9f9f9] to-[#cb857c] text-white items-center justify-center px-10">
         <div className="text-center">
           <div className="rounded-full mx-auto mb-4 flex items-center justify-center">
@@ -53,15 +57,12 @@ const Login = () => {
         </div>
       </div>
 
-      {/* Right Panel for Form - Mobile & Desktop */}
       <div className="flex flex-col items-center justify-center px-8 py-10 w-full sm:basis-1/3 bg-white h-screen">
-        {/* Mobile: Logo + Welcome Text */}
         <div className="sm:hidden text-center mb-6">
           <img src={LogoKost} alt="Logo" className="w-32 h-32 mx-auto mb-2" />
           <h1 className="text-2xl font-bold">Welcome to KostKita</h1>
         </div>
 
-        {/* Form */}
         <form onSubmit={loginAdmin} className="w-full max-w-md space-y-4">
           <h1 className="text-xl font-bold mb-4 text-center sm:text-left">
             Login
@@ -87,7 +88,12 @@ const Login = () => {
 
           <button
             type="submit"
-            className="bg-[#9c2d41] hover:bg-[#C81737FF] text-white p-2 w-full rounded cursor-pointer"
+            disabled={isButtonDisabled}
+            className={`p-2 w-full rounded text-white ${
+              isButtonDisabled
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-[#9c2d41] hover:bg-[#C81737FF] cursor-pointer"
+            }`}
           >
             Login
           </button>
