@@ -1,0 +1,19 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.cards {
+  background: linear-gradient(#2196f3, #2196f3 30%, #1d3548 30%, #1d3548);
+  overflow: hidden;
+}
+
+.imgBx {
+  transition: 0.5s;
+  z-index: 100000;
+  transform-origin: top;
+  overflow: hidden;
+}
+.cont .cards:hover .imgBx {
+  transform: translateY(30px) scale(0.5);
+}
