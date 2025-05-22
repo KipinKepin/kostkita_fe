@@ -22,7 +22,6 @@ const ManageRoom = () => {
     try {
       const res = await api.get("/kos");
       console.log(res.data.data);
-
       setKos(Array.isArray(res.data?.data) ? res.data.data : []);
     } catch (err) {
       console.error("Fetch error:", err);
@@ -31,6 +30,7 @@ const ManageRoom = () => {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchKosan();
   }, []);
@@ -48,9 +48,23 @@ const ManageRoom = () => {
     }
   };
 
-  const filteredKos = kos.filter((k) =>
-    k.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredKos = kos.filter((room) => {
+    const facilities = room.facilities?.map((f) => f.name).join(", ") || "";
+    const availableRooms =
+      room.kamar?.filter((k) => k.status === "available").length || 0;
+
+    const combinedString = `
+      ${room.id}
+      ${room.name}
+      ${room.price}
+      ${room.stockKamar}
+      ${availableRooms}
+      ${room.address}
+      ${facilities}
+    `.toLowerCase();
+
+    return combinedString.includes(searchTerm.toLowerCase());
+  });
 
   if (loading) {
     return (
@@ -106,7 +120,7 @@ const ManageRoom = () => {
             <tbody>
               {filteredKos.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="text-center py-4">
+                  <td colSpan="8" className="text-center py-4">
                     No rooms found.
                   </td>
                 </tr>
@@ -119,7 +133,7 @@ const ManageRoom = () => {
                     <td>{room.stockKamar} kamar</td>
                     <td>
                       {
-                        room.kamar.filter((k) => k.status === "available")
+                        room.kamar?.filter((k) => k.status === "available")
                           .length
                       }{" "}
                       kamar tersedia

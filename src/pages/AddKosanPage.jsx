@@ -9,6 +9,7 @@ import { IoPinOutline } from "react-icons/io5";
 const AddKosanPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -71,12 +72,23 @@ const AddKosanPage = () => {
         stockKamar: Number(form.stockKamar),
       };
       await api.post("/kos", payload);
-      navigate("/manage-rooms");
+      navigate("/manage-room");
+      setLoading(true);
     } catch (err) {
       console.error("Failed to add room:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex flex-col justify-center items-center h-screen w-screen space-y-4">
+        <div className="w-12 h-12 border-4 border-[#9c2d41] border-t-transparent rounded-full animate-spin"></div>
+        <span className="text-[#9c2d41] text-lg font-semibold">Loading...</span>
+      </div>
+    );
+  }
   return (
     <>
       <Layout />
